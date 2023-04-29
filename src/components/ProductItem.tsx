@@ -1,26 +1,34 @@
+import { ProductType } from "../types/ProductType";
 
+type Props = {
+    data: ProductType
+}
 
-export function ProductItem() {
+export function ProductItem({data}: Props) {
 
     return(
-        <div className="relative border-[2px] rounded-2xl border-[#808080]">
-            <div className="relative p-6 flex flex-col gap-3 rounded-2xl text-[#808080] bg-[#dddddd] z-10">
+        <div className="relative w-[180px] h-[250px] border-[2px] rounded-2xl border-[#808080]">
+            <div className="relative h-full p-2 flex flex-col justify-center gap-3 rounded-2xl text-[#808080] bg-[#dddddd] z-10">
 
-                <div className="min-h-[100px] p-3">
-                    img
+                <div className="p-3 flex items-center justify-center">
+                    <img src={data.img} className="h-[120px]" />
                 </div>
 
-                <h2 className="text-[#202020] font-bold">
-                    Leite Integral
-                </h2>
+                <div className="h-full flex-1 flex flex-col justify-end gap-1">
 
-                <span className="text-[#202020]">
-                    R$ 7.99
-                </span>
+                    <h2 className="text-[#202020] font-bold">
+                        {data.name}
+                    </h2>
+
+                    <span className="self-end text-[#202020]">
+                        R$ {data.price}
+                    </span>
+
+                </div>
 
             </div>
 
-            <div className="absolute top-0 right-[-41px] w-[82px] p-2 flex flex-col items-end gap-2 justify-end border rounded-2xl border-[#808080]">
+            <div className="absolute top-0 right-[-41px] w-[82px] p-2 flex flex-col items-end gap-2 justify-end border-[2px] rounded-2xl border-[#808080]">
 
                 <div className="cursor-pointer">
                     <svg width="25" height="25" fill="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

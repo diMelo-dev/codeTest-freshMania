@@ -18,8 +18,10 @@ function App() {
         <div className="p-3 flex flex-col gap-6">
             <InputArea />
 
-            <main className="flex items-center gap-6">
-                <ProductItem />
+            <main className="flex items-center gap-16">
+                {state.productList.map((item) => (
+                    <ProductItem key={item.id} data={item} />
+                ))}
             </main>
         </div>
 

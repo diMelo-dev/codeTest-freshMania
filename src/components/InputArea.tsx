@@ -1,13 +1,22 @@
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Context } from "../contexts/Context";
 
+
+import mel from '../assets/images/Product Images/mel.jpg';
 
 export function InputArea() {
 
+    const { state, dispatch } = useContext(Context);
+
     const imgInput = useRef<HTMLInputElement | null>(null);
 
-    const [imgFile, setImgFile] = useState('');
+    const [imgFile, setImgFile] = useState<File>();
+    const [imgFileName, setImgFileName] = useState('');
+    const [imgURL, setImgURL] = useState('');
     const [nameField, setNameField] = useState('');
     const [priceField, setPriceField] = useState('');
+
+    const [error, setError] = useState<string[]>([]);
 
     const [errorImg, setErrorImg] = useState(false);
     const [errorName, setErrorName] = useState(false);
@@ -21,10 +30,12 @@ export function InputArea() {
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
         if(event.target.files) {
-            setImgFile(event.target.files[0].name);
+            setImgFile(event.target.files[0]);
+            setImgFileName(event.target.files[0].name);
         }
     }
 
+    
     function checkErrors() {
         setErrorImg(false);
         setErrorName(false);
@@ -42,37 +53,57 @@ export function InputArea() {
             setErrorName(true);
         }
 
-        const formatPrice = priceField.replace(',', '.')
+        const formatPrice = priceField.replace(',', '.');
         if(priceField.trim() === '' || isNaN(Number(formatPrice))) {
             setErrorPrice(true)
         }
-
-        if(imgInput.current) {
-            if(imgInput.current.files) {
-                if(nameField.trim() === '' || priceField.trim() === '' || isNaN(Number(formatPrice)) || imgInput.current.files.length === 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+        if(nameField.trim() === '' || priceField.trim() === '' || isNaN(Number(formatPrice)) || imgFileName.trim() === '') {
+            return true;
+        } else {
+            return false;
         }
     }
 
     function handleSubmit() {
         let hasErrors = checkErrors();
 
+
         if(!hasErrors) {
             //Altero no context
-            console.log('alterei')
+            
+            dispatch({
+                type: 'CHANGE_PRODUCT_LIST',
+                payload: {
+                    id: '2',
+                    name: nameField,
+                    price: formatPrice(priceField),
+                    img: imgURL
+                }
+            });
         }
     }
 
+
     function handleErase() {
         imgInput.current = null;
-        setImgFile('');
+        setImgFileName('');
         setNameField('');
         setPriceField('');
     }
+
+    function formatPrice(price: string) {
+        return parseFloat(price.replace(',', '.'));
+    }
+
+    useEffect(() => {
+        if(imgFile instanceof File) {
+            const reader = new FileReader();
+            reader.readAsDataURL(imgFile);
+            reader.onloadend = () => {
+                setImgURL(reader.result as string);
+            }
+        }
+    }, [imgFile]);
 
     return(
         <div className="flex items-center justify-center">
@@ -81,7 +112,7 @@ export function InputArea() {
                     
                     <div className="flex flex-col gap-2">
                         
-                        {imgFile === '' &&
+                        {imgFileName === '' &&
                             <div onClick={handleImgInputClick} className={`min-h-[100px] p-3 flex flex-col gap-3 items-center border-[2px] rounded-2xl cursor-pointer ${errorImg ? 'border-red-500' : 'border-[#808080]'}`}>
                                 <div className="">
                                     <svg className={`${errorImg ? ' fill-red-500' : 'fill-[#808080]'}`} width="50" height="50" fill="#808080" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -103,9 +134,9 @@ export function InputArea() {
                             </div>
                         }
 
-                        {imgFile !== '' &&
+                        {imgFileName !== '' &&
                             <span className="min-h-[100px] p-3 flex items-center justify-center border-[2px] rounded-2xl border-[#808080]">
-                                {imgFile}
+                                {imgFileName}
                             </span>
                         }
                     </div>

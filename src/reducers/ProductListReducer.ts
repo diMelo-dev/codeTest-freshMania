@@ -1,15 +1,24 @@
+import { productList } from "../helpers/productList";
 import { ProductType } from "../types/ProductType";
 import { reducerActionType } from "../types/reducerActionType";
 
 
-export const ProductListInitialState: ProductType[] = [
-    { id: '0', name: 'Produto 0', price: 7.99, img: 'teste' },
-    { id: '1', name: 'Produto 1', price: 7.99, img: 'teste' }
-]
+export const ProductListInitialState: ProductType[] = productList;
 
 export const productListReducer = (state: ProductType[], action: reducerActionType) => {
     
     switch(action.type) {
+        case 'CHANGE_PRODUCT_LIST':
+            {
+            //armanezo as informações do payload
+            const { id, name, price, img } = action.payload;
+        
+            const newProduct:ProductType = { id: id, name: name, price: price, img: img }
+            
+            //retorno uma cópia do estado com o produto alterado
+            return [...state, newProduct];
+            }
+        break;
         case 'CHANGE_PRODUCT_NAME':
             {
             //armanezo as informações do payload
