@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../contexts/Context";
 
 
-import mel from '../assets/images/Product Images/mel.jpg';
+import { v4 as uuidv4 } from 'uuid';
 
 export function InputArea() {
 
@@ -35,7 +35,6 @@ export function InputArea() {
         }
     }
 
-    
     function checkErrors() {
         setErrorImg(false);
         setErrorName(false);
@@ -57,6 +56,7 @@ export function InputArea() {
         if(priceField.trim() === '' || isNaN(Number(formatPrice))) {
             setErrorPrice(true)
         }
+        
         if(nameField.trim() === '' || priceField.trim() === '' || isNaN(Number(formatPrice)) || imgFileName.trim() === '') {
             return true;
         } else {
@@ -74,15 +74,16 @@ export function InputArea() {
             dispatch({
                 type: 'CHANGE_PRODUCT_LIST',
                 payload: {
-                    id: '2',
+                    id: uuidv4(),
                     name: nameField,
                     price: formatPrice(priceField),
                     img: imgURL
                 }
             });
+
+            handleErase();
         }
     }
-
 
     function handleErase() {
         imgInput.current = null;
@@ -92,7 +93,7 @@ export function InputArea() {
     }
 
     function formatPrice(price: string) {
-        return parseFloat(price.replace(',', '.'));
+        return parseFloat(price.replace(',', '.')).toFixed(2);
     }
 
     useEffect(() => {
