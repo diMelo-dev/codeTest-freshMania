@@ -10,10 +10,6 @@ export function ProductItem({data}: Props) {
 
     const [activeEdit, setActiveEdit] = useState(false);
 
-    function formatPrice(price: number) {
-        return price;
-    }
-
     function handleModalEditClick() {
         if(!activeEdit) {
             setActiveEdit(true);
@@ -39,7 +35,7 @@ export function ProductItem({data}: Props) {
                         </h2>
 
                         <span className="self-end text-[#202020]">
-                            R$ {formatPrice(data.price)}
+                            R$ {data.price.toFixed(2)}
                         </span>
 
                     </div>

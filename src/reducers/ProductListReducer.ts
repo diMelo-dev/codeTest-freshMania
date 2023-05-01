@@ -8,7 +8,7 @@ export const ProductListInitialState: ProductType[] = productList;
 export const productListReducer = (state: ProductType[], action: reducerActionType) => {
     
     switch(action.type) {
-        case 'CHANGE_PRODUCT_LIST':
+        case 'CREATE_PRODUCT':
             {
             //armanezo as informações do payload
             const { id, name, price, img } = action.payload;
@@ -51,6 +51,22 @@ export const productListReducer = (state: ProductType[], action: reducerActionTy
                 }
     
                 const newProduct = { ...state[productIndex], price: price };
+                
+                return [...state.slice(0, productIndex), newProduct, ...state.slice(productIndex + 1)];
+                }
+        break;
+        case 'CHANGE_PRODUCT_IMG':
+            {
+                const { id, img } = action.payload;
+                
+                let productIndex = 0;
+                for(let i in state) {
+                    if(state[i].id === id) {
+                        productIndex = parseInt(i);
+                    }
+                }
+    
+                const newProduct = { ...state[productIndex], img: img };
                 
                 return [...state.slice(0, productIndex), newProduct, ...state.slice(productIndex + 1)];
                 }

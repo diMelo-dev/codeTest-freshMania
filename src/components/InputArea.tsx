@@ -72,7 +72,7 @@ export function InputArea() {
             //Altero no context
             
             dispatch({
-                type: 'CHANGE_PRODUCT_LIST',
+                type: 'CREATE_PRODUCT',
                 payload: {
                     id: uuidv4(),
                     name: nameField,
@@ -93,7 +93,7 @@ export function InputArea() {
     }
 
     function formatPrice(price: string) {
-        return parseFloat(price.replace(',', '.')).toFixed(2);
+        return parseFloat(price.replace(',', '.'));
     }
 
     useEffect(() => {
