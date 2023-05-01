@@ -19,6 +19,22 @@ export const productListReducer = (state: ProductType[], action: reducerActionTy
             return [...state, newProduct];
             }
         break;
+        case 'DELETE_PRODUCT':
+            {
+            //armanezo as informações do payload
+            const { id } = action.payload;
+
+            let productIndex = 0;
+            for(let i in state) {
+                if(state[i].id === id) {
+                    productIndex = parseInt(i);
+                }
+            }
+            
+            //retorno uma cópia do estado com o produto alterado
+            return [...state.slice(0, productIndex), ...state.slice(productIndex + 1)];
+            }
+        break;
         case 'CHANGE_PRODUCT_NAME':
             {
             //armanezo as informações do payload

@@ -47,33 +47,52 @@ export function EditModal({item, active, cancelClick}: Props) {
     function handleSave() {
         if(activeSave) {
             //Faço a alteração no produto
-            if(nameField !== item.name) {
-                dispatch({
-                    type: 'CHANGE_PRODUCT_NAME',
-                    payload: {
-                        id: item.id,
-                        name: nameField
-                    }
-                });
-            }
-            
-            const formatedPrice = parseFloat(priceField.replace(',', '.'));
-            if(formatedPrice !== item.price) {
-                dispatch({
-                    type: 'CHANGE_PRODUCT_PRICE',
-                    payload: {
-                        id: item.id,
-                        price: formatedPrice
-                    }
-                });
-            }
+            dispatch({
+                type: 'SET_LOADING',
+                payload: {
+                    isLoading: true
+                }
+            });
 
-            if(imgURL !== item.img) {
+            setTimeout(updateProduct, 1000);
+
+            function updateProduct() {
+            
+                if(nameField !== item.name) {
+                    dispatch({
+                        type: 'CHANGE_PRODUCT_NAME',
+                        payload: {
+                            id: item.id,
+                            name: nameField
+                        }
+                    });
+                }
+                
+                const formatedPrice = parseFloat(priceField.replace(',', '.'));
+                if(formatedPrice !== item.price) {
+                    dispatch({
+                        type: 'CHANGE_PRODUCT_PRICE',
+                        payload: {
+                            id: item.id,
+                            price: formatedPrice
+                        }
+                    });
+                }
+
+                if(imgURL !== item.img) {
+                    dispatch({
+                        type: 'CHANGE_PRODUCT_IMG',
+                        payload: {
+                            id: item.id,
+                            img: imgURL
+                        }
+                    });
+                }
+
                 dispatch({
-                    type: 'CHANGE_PRODUCT_IMG',
+                    type: 'SET_LOADING',
                     payload: {
-                        id: item.id,
-                        img: imgURL
+                        isLoading: false
                     }
                 });
             }

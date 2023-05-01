@@ -16,7 +16,6 @@ export function InputArea() {
     const [nameField, setNameField] = useState('');
     const [priceField, setPriceField] = useState('');
 
-    const [error, setError] = useState<string[]>([]);
 
     const [errorImg, setErrorImg] = useState(false);
     const [errorName, setErrorName] = useState(false);
@@ -70,18 +69,36 @@ export function InputArea() {
 
         if(!hasErrors) {
             //Altero no context
-            
             dispatch({
-                type: 'CREATE_PRODUCT',
+                type: 'SET_LOADING',
                 payload: {
-                    id: uuidv4(),
-                    name: nameField,
-                    price: formatPrice(priceField),
-                    img: imgURL
+                    isLoading: true
                 }
             });
 
-            handleErase();
+            setTimeout(createProduct, 1000);
+
+            function createProduct() {
+                dispatch({
+                    type: 'CREATE_PRODUCT',
+                    payload: {
+                        id: uuidv4(),
+                        name: nameField,
+                        price: formatPrice(priceField),
+                        img: imgURL
+                    }
+                });
+    
+                handleErase();
+
+                dispatch({
+                    type: 'SET_LOADING',
+                    payload: {
+                        isLoading: false
+                    }
+                });
+            }
+            
         }
     }
 
