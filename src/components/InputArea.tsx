@@ -121,7 +121,6 @@ export function InputArea() {
     function handleErase() {
         //Apago os campos de input
         //É utilizado posteriormente pelo icone de borracha e após a criação de produto
-        imgInput.current = null;
         setImgFileName('');
         setNameField('');
         setPriceField('');
