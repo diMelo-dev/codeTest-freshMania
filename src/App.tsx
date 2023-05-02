@@ -7,6 +7,7 @@ import { Context } from "./contexts/Context"
 
 function App() {
 
+    //Acessar a lista de produtos e o loading
     const { state, dispatch } = useContext(Context);
 
     
@@ -14,9 +15,11 @@ function App() {
     <div className="min-h-screen flex flex-col bg-[#dddddd] font-sans">
         <Header />
 
-        <div className=" p-11 flex flex-col gap-12">
+        <div className=" p-14 flex flex-col gap-12">
             <InputArea />
 
+            {/* Caso o loading seja falso (não está durante uma operação de alteração no Contexto)
+             os produtos são exibidos na tela */}
             {!state.loading.isLoading && 
                 <main className="flex items-center justify-center flex-wrap gap-14">
                     {state.productList.map((item) => (
@@ -25,6 +28,8 @@ function App() {
                 </main>
             }
 
+            {/* Caso o loading seja verdadeiro (está durante uma operação de alteração no Contexto)
+             o carregador é exibido na tela */}
             {state.loading.isLoading &&
                 <div className="flex justify-center">
                     <div role="status">

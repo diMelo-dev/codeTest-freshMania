@@ -16,18 +16,24 @@ export function InputArea() {
     const [nameField, setNameField] = useState('');
     const [priceField, setPriceField] = useState('');
 
-
     const [errorImg, setErrorImg] = useState(false);
     const [errorName, setErrorName] = useState(false);
     const [errorPrice, setErrorPrice] = useState(false);
 
     function handleImgInputClick() {
+        //Essa função permite que um clique na div de 'Upload de imagem'
+        //abra a janela de seleção de arquivo
+        //Dessa forma o input type file pode ficar com display none
         if(imgInput.current) {
             imgInput.current.click();
         }
     }
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+        //Quando o usuário seleciona um arquivo, esse arquivo é atribuído
+        //ao imgFile e o nome do arquivo para imgFileName
+        //Posteriormente, imgFile será lido pelo FileReader como uma URL, que será armazenada no Contexto
+        //imgFileName será utilizado para checagens de erro
         if(event.target.files) {
             setImgFile(event.target.files[0]);
             setImgFileName(event.target.files[0].name);
@@ -35,10 +41,13 @@ export function InputArea() {
     }
 
     function checkErrors() {
+        //Função que se os campos foram preenchidos corretamente pelo usuário
         setErrorImg(false);
         setErrorName(false);
         setErrorPrice(false);
 
+        //Caso o usuário n tenha selecionado nenhum arquivo, o estado errorImg é alterado
+        //errorImg será utilizado para destacar a div de Upload de imagem e informar o usuário sobre o erro
         if(imgInput.current) {
             if(imgInput.current.files) {
                 if(imgInput.current.files.length === 0) {
@@ -56,6 +65,7 @@ export function InputArea() {
             setErrorPrice(true)
         }
         
+        //Caso tenha error em algum dos campos a função retorna true
         if(nameField.trim() === '' || priceField.trim() === '' || isNaN(Number(formatPrice)) || imgFileName.trim() === '') {
             return true;
         } else {
@@ -64,11 +74,14 @@ export function InputArea() {
     }
 
     function handleSubmit() {
+        //Utiliza a função checkErrors para determinar se a alteração 
+        //no Contexto será feita
         let hasErrors = checkErrors();
-
-
+        
+        //Se nao tiver error, faço alteração no Contexto
         if(!hasErrors) {
-            //Altero no context
+            
+            //Coloco loading como true para simular uma requisição a um bd
             dispatch({
                 type: 'SET_LOADING',
                 payload: {
@@ -76,8 +89,10 @@ export function InputArea() {
                 }
             });
 
+            //Coloco um timeout para simular uma requisição a um bd
             setTimeout(createProduct, 1000);
 
+            
             function createProduct() {
                 dispatch({
                     type: 'CREATE_PRODUCT',
@@ -89,6 +104,7 @@ export function InputArea() {
                     }
                 });
     
+                //Apago os campos de input
                 handleErase();
 
                 dispatch({
@@ -103,6 +119,8 @@ export function InputArea() {
     }
 
     function handleErase() {
+        //Apago os campos de input
+        //É utilizado posteriormente pelo icone de borracha e após a criação de produto
         imgInput.current = null;
         setImgFileName('');
         setNameField('');
@@ -110,10 +128,13 @@ export function InputArea() {
     }
 
     function formatPrice(price: string) {
+        //Utilizada para aceitar vírgulas no input de preço
         return parseFloat(price.replace(',', '.'));
     }
 
     useEffect(() => {
+        //Sempre que o usuário selecionar um novo arquivo, uma nova URL será
+        //armazenada em imgURL
         if(imgFile instanceof File) {
             const reader = new FileReader();
             reader.readAsDataURL(imgFile);
@@ -130,6 +151,7 @@ export function InputArea() {
                     
                     <div className="flex flex-col gap-2">
                         
+                        {/* Caso o usuário n tenha selecionado nenhum arquivo */}
                         {imgFileName === '' &&
                             <div onClick={handleImgInputClick} className={`min-h-[100px] p-3 flex flex-col gap-3 items-center border-[2px] rounded-2xl cursor-pointer ${errorImg ? 'border-red-500' : 'border-[#808080]'}`}>
                                 <div className="">
@@ -138,7 +160,7 @@ export function InputArea() {
                                     </svg>
                                 </div>
 
-                                <span className={`${errorImg ? 'text-red-500' : 'text-[#808080]'}`}>
+                                <span className={`text-center ${errorImg ? 'text-red-500' : 'text-[#808080]'}`}>
                                     Upload da imagem
                                 </span>
 
@@ -152,6 +174,7 @@ export function InputArea() {
                             </div>
                         }
 
+                        {/* Após a seleção de um arquivo */}
                         {imgFileName !== '' &&
                             <span className="min-h-[100px] p-3 flex items-center justify-center border-[2px] rounded-2xl border-[#808080]">
                                 {imgFileName}
@@ -164,7 +187,7 @@ export function InputArea() {
                         placeholder="Nome do produto"
                         value={nameField}
                         onChange={(e) => setNameField(e.target.value)}
-                        className={`py-2 px-4 border-[2px] rounded-full bg-transparent outline-none ${errorName ? 'border-red-500 placeholder:text-red-500' : 'border-[#808080]'}`} 
+                        className={`py-2 px-4 w-full border-[2px] rounded-full bg-transparent outline-none ${errorName ? 'border-red-500 placeholder:text-red-500' : 'border-[#808080]'}`} 
                     />
                     
                     <input 
@@ -178,16 +201,16 @@ export function InputArea() {
 
                 </div>
 
-                <div className="absolute top-0 right-[-41px] w-[82px] p-2 flex flex-col items-end gap-2 justify-end border-[2px] rounded-2xl border-[#808080]">
+                <div className="absolute top-0 right-[-36px] w-[72px] p-2 flex flex-col items-end gap-2 justify-end border-[2px] rounded-2xl border-[#808080]">
 
                     <div onClick={handleSubmit} className="cursor-pointer">
-                        <svg width="25" height="25" fill="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="20" height="20" fill="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17Z"></path>
                         </svg>
                     </div>
 
                     <div onClick={handleErase} className="cursor-pointer">
-                        <svg width="25" height="25" fill="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="20" height="20" fill="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M14 19.002h7v2h-9l-3.998.002-6.487-6.487a1 1 0 0 1 0-1.414L12.12 2.496a1 1 0 0 1 1.415 0l7.778 7.778a1 1 0 0 1 0 1.414L14 19.002Zm1.657-4.485 3.535-3.536-6.364-6.364-3.535 3.536 6.364 6.364Z"></path>
                         </svg>
                     </div>

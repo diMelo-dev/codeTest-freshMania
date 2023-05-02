@@ -5,16 +5,19 @@ import { LoadingType } from "../types/LoadingType";
 import { ProductType } from "../types/ProductType";
 import { reducerActionType } from "../types/reducerActionType";
 
+//Definio o tipo do initialState para passar para o mainReducer 
 type initialStateType = {
     productList: ProductType[],
     loading: LoadingType
 }
 
+//O meu contexto é um objeto com state e dispatch
 type ContextType = {
     state: initialStateType;
     dispatch: React.Dispatch<any>;
 }
 
+//Initial State passado para o createContext
 const initialState = {
     productList: ProductListInitialState,
     loading: loadingInitialState
@@ -41,6 +44,8 @@ const mainReducer = (state: initialStateType, action: reducerActionType) => ({
 export const ContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     
     //recebo o estado atual e uma função dispatch
+    //o hook useReducer recebe uma função reducer e o estado inicial
+    //a função reducer passada é o mainReducer, que engloba todos os reducers
     const [state, dispatch] = useReducer(mainReducer, initialState);
     
     //os componentes filhos poderão acessar o estado atual e a função dispatch

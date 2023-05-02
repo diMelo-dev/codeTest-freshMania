@@ -22,8 +22,6 @@ export function EditModal({item, active, cancelClick}: Props) {
 
     const [activeSave, setActiveSave] = useState(true);
 
-    const [errorName, setErrorName] = useState(false);
-    const [errorPrice, setErrorPrice] = useState(false);
 
     function handleImgInputClick() {
         if(imgInput.current) {
@@ -38,6 +36,8 @@ export function EditModal({item, active, cancelClick}: Props) {
     }
 
     function handleCancelClick() {
+        //Caso o usuário clique em cancelar, as informações dos campos
+        //voltam a ser as informações do produto salvas no Contexto
         setImgURL(item.img);
         setNameField(item.name);
         setPriceField(item.price.toString());
@@ -45,8 +45,9 @@ export function EditModal({item, active, cancelClick}: Props) {
     }
     
     function handleSave() {
+        //Função que altera as informações no Contexto
         if(activeSave) {
-            //Faço a alteração no produto
+            
             dispatch({
                 type: 'SET_LOADING',
                 payload: {
@@ -54,10 +55,12 @@ export function EditModal({item, active, cancelClick}: Props) {
                 }
             });
 
+            //Timeout para simular uma requisição
             setTimeout(updateProduct, 1000);
 
             function updateProduct() {
             
+                //Caso o usuário tenha feito modificações no nome do produto
                 if(nameField !== item.name) {
                     dispatch({
                         type: 'CHANGE_PRODUCT_NAME',
@@ -69,6 +72,7 @@ export function EditModal({item, active, cancelClick}: Props) {
                 }
                 
                 const formatedPrice = parseFloat(priceField.replace(',', '.'));
+                //Caso o usuário tenha feito modificações no preço do produto
                 if(formatedPrice !== item.price) {
                     dispatch({
                         type: 'CHANGE_PRODUCT_PRICE',
@@ -79,6 +83,7 @@ export function EditModal({item, active, cancelClick}: Props) {
                     });
                 }
 
+                //Caso o usuário tenha selecionado outro arquivo
                 if(imgURL !== item.img) {
                     dispatch({
                         type: 'CHANGE_PRODUCT_IMG',
@@ -98,10 +103,14 @@ export function EditModal({item, active, cancelClick}: Props) {
             }
         }
 
+        //Após as alterações, fecha o modal
         cancelClick();
     }
 
     useEffect(() => {
+        //Sempre que o usuário digitar algo nos campos de nome e preço,
+        //verificações são feitas para determinar se o usuário pode
+        //mandar essas infos para alterar no Contexto
         const formatedPrice = Number(priceField.replace(',', '.'));
         if(nameField.trim() === '' || priceField.trim() === '' || isNaN(formatedPrice)) {
             setActiveSave(false);
@@ -154,7 +163,7 @@ export function EditModal({item, active, cancelClick}: Props) {
                                 placeholder="Nome do produto"
                                 value={nameField}
                                 onChange={(e) => setNameField(e.target.value)}
-                                className={`py-2 px-4 border-[2px] rounded-full bg-transparent outline-none ${errorName ? 'border-red-500 placeholder:text-red-500' : 'border-[#808080]'}`} 
+                                className={`py-2 px-4 border-[2px] border-[#808080] rounded-full bg-transparent outline-none `} 
                             />
                         </div>
 
@@ -169,14 +178,14 @@ export function EditModal({item, active, cancelClick}: Props) {
                                 size={6}
                                 value={priceField}
                                 onChange={(e) => setPriceField(e.target.value)}
-                                className={`py-2 px-4 border-[2px] rounded-full bg-transparent outline-none ${errorPrice ? 'border-red-500 text-red-500 placeholder:text-red-500' : 'border-[#808080]'}`} 
+                                className={`py-2 px-4 border-[2px] border-[#808080] rounded-full bg-transparent outline-none`} 
                             />
                         </div>
                     </div>
 
                 </div>
 
-                <div className="flex gap-5 text-white font-bold">
+                <div className="flex flex-col gap-5 text-white font-bold min-[300px]:flex-row">
 
                     <div onClick={handleCancelClick} className="p-2 flex-1 rounded-lg text-center bg-red-500 cursor-pointer transition-all hover:bg-red-500/90">
                         Cancelar
