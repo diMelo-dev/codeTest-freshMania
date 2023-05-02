@@ -101,10 +101,11 @@ export function EditModal({item, active, cancelClick}: Props) {
                     }
                 });
             }
+            cancelClick();
         }
 
         //Após as alterações, fecha o modal
-        cancelClick();
+        
     }
 
     useEffect(() => {
