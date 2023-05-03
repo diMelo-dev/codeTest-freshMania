@@ -49,7 +49,7 @@ npm run dev
 - [React](https://pt-br.reactjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 
-# :earth_americas: Access
+# :earth_americas: Acesso
 Você pode acessar a aplicação funcional no seguinte link:
 - [Link de Acesso](https://devmarket-dimelo.netlify.app/)
 
